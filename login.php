@@ -1,5 +1,10 @@
 <?php
     session_start();
+    //SI EXISTE UN USER, REDIRECCIONAMOS PARA QUE NO VUELVA A SALIR EL FORMULARIO LOGIN
+    if (isset($_SESSION['user_id'])){
+        header('Location: /php_login_mysql');
+    }
+
     include("db.php");
 
     if(!empty($_POST['email']) && !empty($_POST['password'])) {
