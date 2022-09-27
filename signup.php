@@ -1,4 +1,24 @@
-<?php include("db.php")?>
+<?php 
+    include("db.php");
+
+    $message = '';
+    
+    if(!empty($_POST['email']) && !empty($_POST['password'])) {
+        $query = "INSERT INTO users (email, password) VALUES (:email, :password)";
+        $stmt = $conn->prepare($query);
+        //REEMPLAZAR
+        $stmt->bindParam(':email', $_POST['email']);
+        $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+        $stmt->bindParam(':password', $password);
+
+        if($stmt->execute()) {
+            $message = 'Successfully created new user';
+        } else {
+            $message = 'Sorry there must have been an issue creating your account';
+        }
+    }
+    
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -11,6 +31,11 @@
     </head>
     <body>
         <?php include("partials/header.php")?>
+
+        <?php if(!empty($message)):?>
+            <p><?= $message ?></p>
+
+        <?php endif; ?>
 
         <h1>SignUp</h1>
         <span>or <a href="login.php">Login</a></span>
